@@ -20,4 +20,4 @@ var canvas = document.getElementById('myCanvas');
 		var paddleWidth = 10;
 		var paddleHeight = 400;
 		var paddleSpeed = 0.7;
-		var numballs = 2;
+		var numballs = 5;
