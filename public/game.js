@@ -39,7 +39,7 @@ function game(){
         var context = canvas.getContext('2d');
         var collisionDamper = 0.0;
         var floorFriction = 0.0000 * timeDiff;
-        var mouseForceMultiplier = 0 * timeDiff;
+        var mouseForceMultiplier = 0.1 * timeDiff;
         var restoreForce = 0;//0.002 * timeDiff;
 
         for(var n = 0; n < balls.length; n++) {
@@ -228,6 +228,7 @@ function game(){
         context.beginPath();
         context.rect(0, 0, canvas.width, canvas.height);
         context.fill()
+        if(!started) context.clearRect(0, 0, canvas.width, canvas.height);
 
         // render
 		renderBall(context);
@@ -237,8 +238,8 @@ function game(){
         // request new frame
 		
         requestAnimFrame(function() {
-		  if(started)
-			animate(canvas, balls, lastTime, mousePos);
+		      if(started)
+			       animate(canvas, balls, lastTime, mousePos);
         });
       }
 
@@ -275,6 +276,7 @@ function game(){
       started = false;
       balls = initBalls();
       paddles = initPaddles();
+
     }
 	  function endGame(){
 		started = false;
