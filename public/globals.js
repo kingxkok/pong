@@ -17,7 +17,12 @@ var canvas = document.getElementById('myCanvas');
 //game specific VARS
 		var started  = false;
 		var ballRadius = 10;
-		var paddleWidth = 10;
-		var paddleHeight = 400;
-		var paddleSpeed = 0.7;
-		var numballs = 5;
+		var paddleWidth = 20;
+		var paddleHeight = 200;
+		var paddleSpeed = 0.8;
+		var numballs = 2;
+		var ballspeed = 1;
+		var lifespan = 900;
+		var spawn = true;
+
+        var animspeedup = 10;

@@ -1,16 +1,17 @@
 
 
 var killgame = false;
+var speedup = animspeedup;
 
 function game(){
 	
  	window.requestAnimFrame = (function(callback) {
         return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
-        function(callback) {
+         function(callback) {
           window.setTimeout(callback, 1000 / 60);
         };
       })();
-
+      
 
 	  
       function getMousePos(canvas, evt) {
@@ -34,12 +35,15 @@ function game(){
       }
 
 
+
             //Balls
       function updateBalls(canvas, balls, timeDiff, mousePos) {
+        if(balls[0]===undefined) endRound();
+       // console.log("ball 0 " + balls[0].x + " " + balls[0].speed() + " ball 1 " + balls[1].x + " " + balls[1].speed())
         var context = canvas.getContext('2d');
         var collisionDamper = 0.0;
         var floorFriction = 0.0000 * timeDiff;
-        var mouseForceMultiplier = 0.1 * timeDiff;
+        var mouseForceMultiplier = -2 * timeDiff;
         var restoreForce = 0;//0.002 * timeDiff;
 
         for(var n = 0; n < balls.length; n++) {
@@ -48,9 +52,22 @@ function game(){
           // set ball position based on velocity
           ball.y += ball.vy;
           ball.x += ball.vx;
-          //natural acceleration
-          ball.vx += Math.sign(ball.vx)*0.0001*timeDiff;
-          ball.vy += Math.sign(ball.vy)*0.0001*timeDiff;
+
+          let curspd = ball.speed();
+          //speed limiter speed limit
+          if (curspd>30){
+            ball.setSpeed(30);
+          }
+          else if(curspd>10){
+            ball.setSpeed(0.9*ball.speed());
+          }
+          else if(curspd>5)
+          {
+            ball.setSpeed(0.99*ball.speed());
+          } 
+
+          //accelerator
+          ball.vx+=Math.sign(ball.vx)*0.0001;
 
           // restore forces
           if(ball.x > ball.origX) {
@@ -93,7 +110,71 @@ function game(){
             ball.vy -= forceY;
           }
 
-          // floor friction
+
+
+          //Reduce ball life
+          ball.life--;
+          if(ball.life != Infinity)
+          ball.radius = (ballRadius*ball.life/lifespan)/4*3 + ballRadius/4;
+          //remove balls
+          let removeBall = function(ball){
+            balls.splice(n,1);
+            n--;
+          }
+          if(ball.life<=0) {
+            removeBall();
+            continue;
+          }
+
+          //paddles
+          for(var p = 0; p < paddles.length; p++){
+
+          	var paddle = paddles[p];
+
+          	//corner
+          	if(paddleCornerHit(paddle, ball)) continue;
+
+            let randSign = function(){
+              if(Math.random()>0.5) return -1;
+              else return 1;
+            }
+
+            let bounceMultiplier = 3;
+          	//left paddle
+          	if(p == 0)
+	          	if(ball.x < (paddle.x + paddle.width + ball.radius) && ball.x > (paddle.x-ball.radius) 
+	          	 && ball.y < paddle.y + paddle.height + ball.radius && ball.y > paddle.y-ball.radius ){
+	          		ball.x = paddle.x + paddle.width + ball.radius + 1;
+	          		ball.vx *= -1*bounceMultiplier;
+                ball.vy *= bounceMultiplier;
+	         // 		ball.vx *= (1 - collisionDamper);
+
+                if(spawn)
+                balls.push(new Ball(ball.x,ball.y,3,randSign(),BLACK,lifespan*Math.random()-balls.length)); //spawn ball
+	          	}
+	         //right paddle
+          	if(p==1)
+          		if(ball.x + ball.radius > paddle.x && ball.x - ball.radius < paddle.x + paddle.width
+          		 && ball.y < paddle.y + paddle.height + ball.radius && ball.y > paddle.y-ball.radius ){
+          			ball.x = paddle.x - ball.radius - 1;
+	          		ball.vx *= -1*bounceMultiplier;
+                ball.vy *= bounceMultiplier;
+	         // 		ball.vx *= (1 - collisionDamper);
+
+
+                if(spawn)
+                balls.push(new Ball(ball.x,ball.y,-3,randSign(),BLACK,lifespan*Math.random()-balls.length));
+          		}
+ 			
+
+          }
+
+          
+
+
+          //Floor and walls
+          // floor friction 
+          /*
           if(ball.vx > 0) {
             ball.vx -= floorFriction;
           }
@@ -105,7 +186,7 @@ function game(){
           }
           else if(ball.vy < 0) {
             ball.vy += floorFriction;
-          }
+          } */
 
           // floor condition
           if(ball.y > (canvas.height - ball.radius)) {
@@ -126,8 +207,10 @@ function game(){
             ball.x = canvas.width - ball.radius - 2;
             ball.vx *= -1;
             ball.vx *= (1 - collisionDamper);
+            removeBall();
             players[0].score++;
-            endRound();
+            continue;
+          //  endRound();
           }
 
           // left wall condition
@@ -135,36 +218,10 @@ function game(){
             ball.x = ball.radius + 2;
             ball.vx *= -1;
             ball.vx *= (1 - collisionDamper);
+            removeBall();
             players[1].score++;
-            endRound()
-          }
-
-          //paddles
-          for(var p = 0; p < paddles.length; p++){
-
-          	var paddle = paddles[p];
-
-          	//corner
-          	if(paddleCornerHit(paddle, ball)) continue;
-
-          	//left paddle
-          	if(p == 0)
-	          	if(ball.x < (paddle.x + paddle.width + ball.radius) && ball.x > (paddle.x-ball.radius) 
-	          	 && ball.y < paddle.y + paddle.height + ball.radius && ball.y > paddle.y-ball.radius ){
-	          		ball.x = paddle.x + paddle.width + ball.radius ;
-	          		ball.vx *= -1;
-	          		ball.vx *= (1 - collisionDamper);
-	          	}
-	         //right paddle
-          	if(p==1)
-          		if(ball.x + ball.radius > paddle.x && ball.x - ball.radius < paddle.x + paddle.width
-          		 && ball.y < paddle.y + paddle.height + ball.radius && ball.y > paddle.y-ball.radius ){
-          			ball.x = paddle.x - ball.radius ;
-	          		ball.vx *= -1;
-	          		ball.vx *= (1 - collisionDamper);
-          		}
- 			
-
+            continue;
+          //  endRound()
           }
 
         }
@@ -220,7 +277,7 @@ function game(){
         if(started){ //only update if started
        	 updateBalls(canvas, balls, timeDiff, mousePos);
        	 updatePaddles(canvas, paddles, timeDiff);
-    	}
+    	 }
         lastTime = time;
 
         // clear
@@ -236,11 +293,18 @@ function game(){
 		renderScores(context);
 
         // request new frame
-		
+        console.log(speedup)
+		    
         requestAnimFrame(function() {
-		      if(started)
-			       animate(canvas, balls, lastTime, mousePos);
+		      if(started){
+              animate(canvas, balls, lastTime, mousePos);
+              while(speedup){
+                speedup--;
+			           animate(canvas, balls, lastTime, mousePos);
+              }
+           }
         });
+
       }
 
       //Rendering
@@ -276,7 +340,7 @@ function game(){
       started = false;
       balls = initBalls();
       paddles = initPaddles();
-
+      speedup = animspeedup;
     }
 	  function endGame(){
 		started = false;
@@ -289,7 +353,7 @@ function game(){
       
       var players = initPlayers();
       var balls = initBalls();
-	  var paddles = initPaddles();
+	    var paddles = initPaddles();
       var date = new Date();
       var time = date.getTime();
       /*
@@ -330,17 +394,21 @@ function game(){
 		  var kc = (evt.keyCode || evt.which);
 
 		  if(kc == SPACE){
-			if(!started) {
-				animate(canvas, balls, time, mousePos);
-				started = true;
-			}
-			else {
-			  started = false;
-			}
+    		if(!started) {
+    			animate(canvas, balls, time, mousePos);
+    			started = true;
+    		}
+    		else {
+    		  started = false;
+    		}
 		  }//evt.kc = space
 		 
 	  });
 	  
+    window.pause = function(){
+      started = false;
+    }
+
 	  window.addEventListener('keydown', function(evt){
 	  	var kc = (evt.keyCode || evt.which);
 	  	//console.log(kc);
@@ -376,9 +444,12 @@ function game(){
 	 	}
 	 });
 
-	  animate(canvas, balls, time, mousePos);
+    animate(canvas, balls, time, mousePos);
 
 	}
+
+
+
 
 	
 

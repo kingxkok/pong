@@ -10,7 +10,7 @@
 
   function initBalls() {
     balls = [];
-    let speed = 3; //ballspeed
+    let speed = ballspeed; //ballspeed
     function xvel(speed){
         let xvel = (Math.random()>0.5)? speed : speed*-1;
         return xvel + (Math.random()-0.5);
@@ -28,8 +28,8 @@
       paddles = [];
       let width = paddleWidth;
       let height = paddleHeight;
-      paddles.push(new Paddle(10, (canvas.height-height)/2, width, height, RED, Q, A ));
-      paddles.push(new Paddle(790-width, (canvas.height-height)/2, width, height, GREEN, P, L));
+      paddles.push(new Paddle(40, (canvas.height-height)/2, width, height, RED, Q, A ));
+      paddles.push(new Paddle(760-width, (canvas.height-height)/2, width, height, GREEN, P, L));
       return paddles;
   }
 
@@ -40,7 +40,7 @@
     this.name = name;
     this.score = 0;
   }
-  function Ball(x, y, vx, vy, color) {
+  function Ball(x, y, vx, vy, color, life) {
     this.x = x;
     this.y = y;
     this.vx = vx;
@@ -49,7 +49,17 @@
     this.origX = x;
     this.origY = y;
     this.radius = ballRadius;
+    this.life = life || Infinity;
   }
+  Ball.prototype.speed = function(){
+    return Math.sqrt((this.vx*this.vx) + (this.vy*this.vy));
+  }
+  Ball.prototype.setSpeed = function(speed){
+    let curspd = this.speed();
+    this.vx = this.vx/curspd*speed;
+    this.vy = this.vy/curspd*speed;
+  }
+
   function Paddle(x, y, width, height, color, upKey, downKey){
       this.x = x;
       this.y = y;
