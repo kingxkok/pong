@@ -9,9 +9,11 @@
         }
         #myCanvas {
             outline: black 3px solid;
+            z-index: 1;
         }
         #game{
             text-align: center;
+            position: relative;
         }
         #instructions {
             font-family: sans-serif;
@@ -23,9 +25,11 @@
   <body>
       <div id="game">
          <canvas id="myCanvas" width="800" height="600"></canvas>
-           <script src="globals.js" type="text/javascript"></script>
+         <script src="globals.js" type="text/javascript"></script>
          <script src="classes.js" type="text/javascript"></script>
          <script src="game.js"></script>
+         <script src="menu.js"></script>
+         <button id="menubtn" style="z-index:2; position:relative; top:40px; left:-800px" >Menu</button>
          <p id="instructions">Space to play/pause; QA and PL for up/down; Esc to restart</p>
     </div>
   </body>
