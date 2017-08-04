@@ -660,7 +660,7 @@
         plane.font = '32px Comic Sans MS';
         plane.fillStyle = 'black';
         plane.fillText('Click / Tap on anywhere to begin', GUI.width/2, GUI.height*1/2);
-        GUI.addEventListener('click', function menuClick(e){  //  function click
+        window.addEventListener('click', function menuClick(e){  //  function click
               plane.clearRect(0,0,GUI.width,GUI.height);
               player_L = new Player('blue','left');
               player_R = new Player('red','right');
@@ -711,7 +711,7 @@
                   };
                 };
               });
-              GUI.addEventListener('touchmove', function inGameTouchMove(e){  //  function click
+              window.addEventListener('touchmove', function inGameTouchMove(e){  //  function click
                 relativeX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - GUI.offsetLeft;
                 relativeY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - GUI.offsetTop;
                 if (relativeX<1024/3) {
@@ -728,7 +728,7 @@
                   };
                 };
               });
-              GUI.addEventListener('touchend', function inGameTouchEnd(e){  //  function click
+              window.addEventListener('touchend', function inGameTouchEnd(e){  //  function click
                 relativeX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - GUI.offsetLeft;
                 relativeY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - GUI.offsetTop;
                 if (relativeX<1024/3) {
@@ -743,6 +743,7 @@
         refresh();
       });
     };
+    backgroundMusic.play();
     refresh();
   </script>
 
