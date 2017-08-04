@@ -631,16 +631,7 @@
                   bonus += 1;
                 };
                 ball[0].team = player_L.paddle.team;
-              }/*} else {
-                ball[0].direction = - ball[0].direction;
-                ball[0].x += ball[0].speed*Math.cos(ball[0].direction)*timeDiff/90;
-                ball[0].y += ball[0].speed*Math.sin(ball[0].direction)*timeDiff/90;
-                if (bonus <= 39) {
-                  ball[0].speed += 2;
-                  bonus += 1;
-                };
-                ball[0].team = player_L.paddle.team;
-              };*/
+              };
             };
             
             if (ball[0].y+ball[0].radius-720 >= 0 || ball[0].y-ball[0].radius <= 0) {
@@ -677,11 +668,11 @@
               stat = ['game','classic','pause'];
               soundEffect.gameStart.play();
               GUI.removeEventListener('click',menuClick);
-              GUI.addEventListener('mousedown', function inGameMouseDown(e){  //  function click
+              GUI.addEventListener('touchstart', function inGameTouchStart(e){  //  function click
                 relativeX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - GUI.offsetLeft;
                 relativeY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - GUI.offsetTop;
                 if (relativeX<1024/3) {
-                  if (relativeY<360) {
+                  if (relativeY<player_L.paddle.y) {
                     player_L.paddle.direction = 'up';
                   } else {
                     player_L.paddle.direction = 'down';
@@ -713,14 +704,31 @@
         stat[2]='pause';
                   };
                 } else if (!botOn) {
-                  if (relativeY<360) {
+                  if (relativeY<player_R.paddle.y) {
                     player_R.paddle.direction = 'up';
                   } else {
                     player_R.paddle.direction = 'down';
                   };
                 };
               });
-              GUI.addEventListener('mouseup', function inGameMouseUp(e){  //  function click
+              GUI.addEventListener('touchmove', function inGameTouchMove(e){  //  function click
+                relativeX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - GUI.offsetLeft;
+                relativeY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - GUI.offsetTop;
+                if (relativeX<1024/3) {
+                  if (relativeY<player_L.paddle.y) {
+                    player_L.paddle.direction = 'up';
+                  } else {
+                    player_L.paddle.direction = 'down';
+                  };
+                } else if (relativeX>2048/3 && !botOn) {
+                  if (relativeY<player_R.paddle.y) {
+                    player_R.paddle.direction = 'up';
+                  } else {
+                    player_R.paddle.direction = 'down';
+                  };
+                };
+              });
+              GUI.addEventListener('touchend', function inGameTouchEnd(e){  //  function click
                 relativeX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - GUI.offsetLeft;
                 relativeY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - GUI.offsetTop;
                 if (relativeX<1024/3) {
