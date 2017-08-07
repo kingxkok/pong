@@ -4,8 +4,8 @@
   "description": "extensible pong game",
   "main": "index.js",
   "engines": {
-     "node":"6.9.1"
-   },
+    "node": "6.9.1"
+  },
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/kingxkok/pong#readme",
   "dependencies": {
-    "express": "^4.15.3"
+    "express": "^4.15.3",
+    "socket.io": "^2.0.3"
   },
   "devDependencies": {}
 }
