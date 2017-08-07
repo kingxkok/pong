@@ -288,9 +288,9 @@ function game(){
         if(!started) context.clearRect(0, 0, canvas.width, canvas.height);
 
         // render
-		renderBall(context);
-		renderPaddle(context);
-		renderScores(context);
+		  renderBall(context);
+		  renderPaddle(context);
+		  renderScores(context);
 
         // request new frame
         console.log(speedup)
@@ -306,6 +306,8 @@ function game(){
         });
 
       }
+
+      
 
       //Rendering
 	  function renderPaddle(context){
@@ -327,7 +329,7 @@ function game(){
         }
 	  }
 	  function renderScores(context){
-	  	for(var n = 0; n < paddles.length; n++){
+	  	for(var n = 0; n < players.length; n++){
 	  		var player = players[n];
 	  		context.fillStyle = BLACK;
 	  		context.font = "20px Arial";

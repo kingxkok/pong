@@ -660,15 +660,15 @@
         plane.font = '32px Comic Sans MS';
         plane.fillStyle = 'black';
         plane.fillText('Click / Tap on anywhere to begin', GUI.width/2, GUI.height*1/2);
-        window.addEventListener('mousedown', function menuClick(e){  //  function click
+        GUI.addEventListener('mousedown', function menuClick(e){  //  function click
               plane.clearRect(0,0,GUI.width,GUI.height);
               player_L = new Player('blue','left');
               player_R = new Player('red','right');
               ball[0] = new Ball(Math.random()*2*Math.PI);
               stat = ['game','classic','pause'];
               soundEffect.gameStart.play();
-              window.removeEventListener('mousedown',menuClick);
-              window.addEventListener('touchstart', function inGameTouchStart(e){  //  function click
+              GUI.removeEventListener('mousedown',menuClick);
+              GUI.addEventListener('touchstart', function inGameTouchStart(e){  //  function click
                 relativeX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - GUI.offsetLeft;
                 relativeY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - GUI.offsetTop;
                 if (relativeX<1024/3) {
@@ -715,7 +715,7 @@
                   };
                 };
               });
-              window.addEventListener('touchmove', function inGameTouchMove(e){  //  function click
+              GUI.addEventListener('touchmove', function inGameTouchMove(e){  //  function click
                 relativeX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - GUI.offsetLeft;
                 relativeY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - GUI.offsetTop;
                 if (relativeX<1024/3) {
@@ -736,7 +736,7 @@
                   };
                 };
               });
-              window.addEventListener('touchup', function inGameTouchEnd(e){  //  function click
+              GUI.addEventListener('touchup', function inGameTouchEnd(e){  //  function click
                 relativeX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - GUI.offsetLeft;
                 relativeY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - GUI.offsetTop;
                 if (relativeX<1024/3) {

@@ -1,48 +1,43 @@
-<!DOCTYPE HTML>
-<html>
-  <head>
-    <style>
-      body {
-     
-      	margin: 0px;
-        background-image: url("https://i.imgsafe.org/3a767d39a2.png");
-        
-        background-position: center;
-        background-repeat: no-repeat;
-        background-color:  white;
-        text-align: center;
-    	
-      }
-      #Hints {
-        font-style: italic;
-        font-weight: bold;
-        color: black;
-      	text-align: center;
-      }
-      #myCanvas{
-      	padding-top: 0px;
-      }
-      #top{
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas Fireworks</title>
+ 
+      <style>
       	
-      	font-weight: bolder;
-      	color:black;
-      }
-     
+      	canvas {
+			cursor: crosshair;
+			display: block;
+			position: relative;
+			z-index: 3;
+			background: black;
+		}
+          
+          html, body {
+              width:  100%;
+              height: 100%;
+              margin: 10px;
+            }
+          
+		canvas:active {
+			cursor: crosshair;
+		}
+
+ /* NOTE: The styles were added inline because Prefixfree needs access to your styles and they must be inlined if they are on local disk! */
    
-    </style>
-  </head>
-  <body id = "myBody">
-  	<p>.</p>
-    <a href='/pong_kai'> Kai </a>
-    <a href='/pong_victor'> Victor </a>
-    <a href='/pong_jordan'> Jordan </a>
-    <a href='/pong_luke'> Luke </a>
-    <a href='/pong_frost'> Frost </a>
+      </style>
 
-    <script>
-        
-    </script>
 
-  </body>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+</head>
+
+<body>
+  
+<canvas id="myCanvas" width="800" height="600"></canvas>
+ <script src="/fireworks.js">
+	
+ </script>
+
+</body>
 </html>
-      
