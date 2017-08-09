@@ -307,7 +307,7 @@ function game(){
 
       }
 
-      
+
 
       //Rendering
 	  function renderPaddle(context){
@@ -331,7 +331,7 @@ function game(){
 	  function renderScores(context){
 	  	for(var n = 0; n < players.length; n++){
 	  		var player = players[n];
-	  		context.fillStyle = BLACK;
+	  		context.fillStyle = 'white';
 	  		context.font = "20px Arial";
 	  		context.fillText("Player " + player.name + ": \t", 10, (20*(1+n)) );
 	  		context.fillText(player.score, 150, (20*(1+n)));

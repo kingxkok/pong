@@ -1,0 +1,332 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
+  </head>
+  <body>
+   <audio autoplay="autoplay" loop="loop">
+    <source src="PONG.mp3" type="audio/mpeg">
+      Your browser does not support the audio tag.
+    </audio>
+      <center><canvas id="myCanvas" width="1000" height="500" style="border:1px solid #000000">
+      </canvas>
+      <p>Start by clicking</p>
+      <div id="score1"></div>
+      <div id="score2"></div>
+      <button id="myBtn">Reset the game</button>
+      </center>
+    <script>
+
+      window.requestAnimFrame = (function(callback) {
+        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+        function(callback) {
+          window.setTimeout(callback, 1000 / 60);
+        };
+      })();
+
+
+
+      //properties/stored values of the ball
+      var canvas = document.getElementById('myCanvas');
+      var context = document.getElementById('myCanvas').getContext('2d');
+      var date = new Date();
+      var time = date.getTime();
+
+      document.getElementById("myBtn").addEventListener("click", reset);
+
+	  function reset() {
+      paddle1.score = 0
+      paddle2.score = 0
+      for(var i = 0; i < balls.length; i++){
+      	let ball = balls[i]
+      	ball.x = 500
+      	ball.y = 250
+      	ball.vx = 0
+      	ball.vy = 0
+      	ball.color = "black"
+      }
+	}	
+      
+      var Keys = {
+          	up: false,
+          	down: false,
+          	left: false,
+          	right: false
+          };
+
+          function Paddle(x, y, width, height, vy, color){
+          		this.x = x; this.y = y; this.width = width; this.height = height; this.color = color || "black"; this.vy = vy; this.score=0;
+          
+          }
+
+          var paddle1 = new Paddle(50,200,10,100,10,"red")
+
+          var paddle2 = new Paddle(950,200,10,100,10,"blue")
+
+          var paddles = []
+
+          paddles.push(paddle1)
+
+          paddles.push(paddle2)
+        
+          function Ball(x, y, r, vx, vy, mass, color){
+          		this.x = x; this.y = y; this.r = r; this.vx = vx; this.vy = vy; this.mass = mass; this.color = color || "black";
+          }
+
+          var ball1 = new Ball(500,250,10,0,0,10)
+
+          var balls = [];
+
+          balls.push(ball1);
+
+          function updatePos(timeDiff, balls){
+            for(var i = 0; i < balls.length; i++){
+              let ball = balls[i];
+              ball.x+=ball.vx*timeDiff;
+              ball.y+=ball.vy*timeDiff;
+
+            }
+          
+         }
+
+         var prev_vx = null
+         var prev_vy = null
+
+         function Start(balls){
+		  	for(var n = 0; n < balls.length; n++){
+		  		let ball = balls[n];
+		  		if(ball.vy === 0 && ball.vx === 0){
+		  		ball.vy = prev_vy || 0.4
+		  		ball.vx = prev_vx || 0.4
+		  	}
+		  	}
+
+		  }
+		 
+		 canvas.addEventListener("click", function(){Start(balls)});
+
+
+                   
+          function animate(canvas, lastTime) {
+          var context = canvas.getContext('2d');
+
+         // update
+          let date = new Date();
+          let time = date.getTime();
+          var timeDiff = time - lastTime;
+          updatePos(timeDiff, balls);
+          lastTime = time;;
+         // clear
+
+         if(paddle1.score === 11){
+         	alert("player 1 win!")
+         	paddle1.score = 0
+         	paddle2.score = 0
+         }
+
+         else if(paddle2.score === 11){
+         	alert("player 2 win!")
+         	paddle1.score = 0
+         	paddle2.score = 0
+         }
+
+        
+         document.getElementById("score1").innerHTML = "Score P1: " + paddle1.score;
+         document.getElementById("score2").innerHTML = "Score P2: " + paddle2.score;
+          
+
+    	  if(Keys.up1 && paddle1.y > 0){
+    	  	paddle1.y -= paddle1.vy;
+		  }
+
+		    else if(Keys.down1 && paddle1.y + 100 < 500){
+		  	  paddle1.y += paddle1.vy;
+		  }
+
+		    if(Keys.up2 && paddle2.y > 0){
+		  	  paddle2.y -= paddle2.vy;
+		  }
+
+		    else if(Keys.down2 && paddle2.y + 100 < 500){
+		  	  paddle2.y += paddle2.vy;
+		  }
+          
+          context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // render
+
+          var c = document.getElementById("myCanvas");
+		  var ctx = c.getContext("2d");
+		  ctx.font = "60px Arial_Black";
+		  ctx.fillStyle = "red";
+		  ctx.fillText("P", 358, 100);
+
+		  var c = document.getElementById("myCanvas");
+		  var ctx = c.getContext("2d");
+		  ctx.font = "60px Arial_Black";
+		  ctx.fillStyle = "green";
+		  ctx.fillText("O", 438, 100);
+
+		  var c = document.getElementById("myCanvas");
+		  var ctx = c.getContext("2d");
+		  ctx.font = "60px Arial_Black";
+		  ctx.fillStyle = "yellow";
+		  ctx.fillText("N", 518, 100);
+
+		  var c = document.getElementById("myCanvas");
+		  var ctx = c.getContext("2d");
+		  ctx.font = "60px Arial_Black";
+		  ctx.fillStyle = "blue";
+		  ctx.fillText("G", 598, 100);
+
+          for(var n = 0; n < balls.length; n++){
+          	let ball = balls[n];
+          	context.beginPath();
+          	context.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI, false);
+          	context.fillStyle = ball.color;
+          	context.fill();
+          }
+          
+            
+           for(var p = 0; p < paddles.length; p++){
+           	let paddle = paddles[p]
+          	var c = document.getElementById("myCanvas")
+          	var ctx = c.getContext("2d");
+          	ctx.fillStyle = paddle.color;
+		  	ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+		  }
+
+
+
+          for(var a = 0; a < balls.length; a++){
+	          let ball = balls[a]
+	          if(ball.x + ball.vx > canvas.width - ball.r ) {
+	          	paddle2.score += 1
+	          	prev_vx = -ball.vx
+	          	prev_vy = -ball.vy
+	          	ball.vx = 0
+	          	ball.vy = 0
+	          	ball.x = 500
+	          	ball.y = 250
+	          	ball.color = "black"
+	         }
+	          if(ball.x + ball.vx < ball.r){
+	          	paddle1.score += 1
+	          	prev_vx = -ball.vx
+	          	prev_vy = -ball.vy
+	          	ball.vx = 0
+	          	ball.vy = 0
+	          	ball.x = 500
+	          	ball.y = 250
+	          	ball.color = "black"
+	          }
+	          if(ball.y + ball.vy > canvas.height - ball.r) {
+	            if(ball.vy > 0)
+	            ball.vy = -ball.vy;
+	         }
+	          if(ball.y + ball.vy < ball.r){
+	          	if(ball.vy < 0)
+	          	ball.vy = -ball.vy;
+	          }
+	          if(paddle2.x > ball.x +  ball.vx && ball.x + ball.vx > paddle2.x - ball.r && paddle2.y + paddle2.height + ball.r > ball.y + ball.vy && ball.y + ball.vy > paddle2.y - ball.r){
+	          	if(ball.vx > 0){
+	          	ball.vx = -ball.vx
+	          	ball.color = "blue"
+	          }
+	          }
+	          if(paddle1.x > ball.x + ball.vx &&  ball.x + ball.vx > paddle1.x - ball.r && paddle1.y + paddle1.height + ball.r > ball.y + ball.vy && ball.y + ball.vy > paddle1.y - ball.r){
+	          	if(ball.vx > 0){
+	          	ball.vx = -ball.vx
+	          	ball.color = "red"
+	          }
+	          }
+	          if(paddle1.x + ball.r + paddle1.width > ball.x + ball.vx && ball.x + ball.vx > paddle1.x && paddle1.y + paddle1.height + ball.r > ball.y + ball.vy && ball.y + ball.vy > paddle1.y - ball.r){
+	          	if(ball.vx < 0){
+	          	ball.vx = -ball.vx
+	          	ball.color = "red"
+	          }
+	          }
+	          if(paddle2.x + ball.r + paddle2.width > ball.x + ball.vx && ball.x + ball.vx > paddle2.x + paddle2.width && paddle1.y + paddle1.height + ball.r > ball.y + ball.vy && ball.y + ball.vy > paddle2.y - ball.r){
+	          	if(ball.vx < 0){
+	          	ball.vx = -ball.vx
+	          	ball.color = "blue"
+	          }
+	          }
+	          if(paddle2.y + paddle2.height + ball.rw > ball.y && paddle2.y + paddle2.height < ball.y && paddle2.x + paddle2.width - ball.r > ball.x +  ball.vx && ball.x +  ball.vx > paddle2.x - ball.r){
+	          	if(ball.vy < 0){
+	          	ball.vy = -ball.vy
+	          	ball.color = "blue"
+	          }
+	          }
+	          if(paddle1.y + paddle1.height + ball.r > ball.y && paddle1.y + paddle1.height < ball.y && paddle1.x + paddle1.width - ball.r > ball.x +  ball.vx && ball.x +  ball.vx > paddle1.x - ball.r){
+	          	if(ball.vy < 0){
+	          	ball.vy = -ball.vy
+	          	ball.color = "red"
+	          }
+	      	  }
+	          if(paddle2.y - ball.r < ball.y && paddle2.y > ball.y && paddle2.x + paddle2.width - ball.r > ball.x +  ball.vx && ball.x +  ball.vx > paddle2.x - ball.r){
+	          	if(ball.vy > 0){
+	          	ball.vy = -ball.vy
+	          	ball.color = "blue"
+	          }
+	      	  }
+	          if(paddle1.y - ball.r < ball.y && paddle1.y > ball.y && paddle1.x + paddle1.width - ball.r > ball.x +  ball.vx && ball.x +  ball.vx > paddle1.x - ball.r){
+	          	if(ball.vy > 0){
+	          	ball.vy = -ball.vy
+	          	ball.color = "red"
+	          }
+	      	  }
+		}
+          	 
+          	  
+
+        // request new frame
+       requestAnimFrame(function() {
+          animate(canvas, time);
+        });
+      }
+			window.onkeydown = function(e){
+          	var kc = e.keyCode;
+          	e.preventDefault();
+          	if (kc === 40) Keys.down2 = true;
+          	if (kc === 38) Keys.up2 = true;
+          	if (kc === 83) Keys.down1 = true;
+          	if (kc === 87) Keys.up1 = true;
+          };
+
+            window.onkeyup = function(e){
+   			var kc = e.keyCode;
+    		e.preventDefault();
+    		if (kc === 40) Keys.down2 = false;
+    		if (kc === 38) Keys.up2 = false;
+    		if (kc === 83) Keys.down1 = false;
+          	if (kc === 87) Keys.up1 = false;
+    	  };
+
+    	  	function collide(ball1, ball2){
+          		var a = (2 * ball2.mass / (ball1.m + ball2.m)) * (((ball1.vx - ball2.vx) * (ball1.x - ball2.x) + (ball1.vy - ball2.vy) * (ball1.y - ball2.y)) / ((ball1.x - ball2.x)**2 + (ball1.y - ball2.y)**2));
+            	var newBall1vx = ball1.vx - a * (ball1.x - ball2.x);
+            	var newBall1vy = ball1.vy - a * (ball1.y - ball2.y);
+
+            	var newBall2vx = ball2.vx - a * (ball2.x - ball1.x);
+            	var newBall2vy = ball2.vy - a * (ball2.y - ball2.y);
+            	ball1.vx = newBall1vx;
+            	ball1.vy = newBall1vy;
+
+            	ball2.vx = newBall2vx;
+            	ball2.vy = newBall2vy;
+            }
+    
+    var canvas = document.getElementById('myCanvas');
+   
+
+   animate(canvas, time); 
+    </script>
+  </body>
+</html>
+      
