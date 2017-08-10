@@ -127,7 +127,7 @@
 			</ul>
 
 			<input id="Game_mode_E" type="checkbox" unchecked>
-			<label for="Game_mode_E" class="animate" style="background: #3366cc" onclick="Excited()" > Extited! Mode</label>
+			<label for="Game_mode_E" class="animate" style="background: #3366cc" onclick="Excited()" > Excited! Mode</label>
 			<ul>
 				<li class="animate">Helps Kai to retire! <br> Get 1,000,000$ before 25.<i class="fa fa-code float-right"></i></li>
 			</ul>
@@ -141,6 +141,10 @@
 			    <label for="prop" class="animate" style="background: #3366cc"> Special Props</label>
 			    <input id="effect_low" type="checkbox" unchecked>
 			    <label for="effect_low" class="animate" style="background: #3366cc">Low Effect</label>
+			    <input id="AI_R" type="checkbox" unchecked>
+			    <label for="AI_R" class="animate" onclick="AI_R_Main ^= true" style="background: #3366cc">Right AI</label>
+			    <input id="AI_L" type="checkbox" unchecked>
+			    <label for="AI_L" class="animate"  onclick="AI_L_Main ^= true" style="background: #3366cc">Left AI</label>
 			    </ul></label>
 		  </ul>
 		</dropdown>
@@ -192,9 +196,17 @@
 	 var balls=[];
 	 var fireworks=[];
 	 var finish
+	 var AI_L_Main=false;
+	 var AI_R_Main=false;
 	
 	 var ice_boom_hit
 	 var ice_alpha=1; 
+	 //AI
+	 var hit_point_L=[];
+	 var hit_point_R=[];
+	 var toMove=0;
+	 var AI_move_L_enable=false;
+	 var AI_move_R_enable=false;
 	//settings
 	 
 	  function Original(){
@@ -215,6 +227,27 @@
 	  	
 
 	  }
+	  Array.prototype.AI_insertion_sort = function() {
+		   var i,j;
+		  /* if(!this) return;
+		   for(var id in this){
+		   	if(this[id].time < this[0].time) this[0] = this[id];
+		   }
+		   return this;*/
+
+		   for(i = 1;i < this.length; i++){
+		    if(!this[i]) continue;
+		   for(j = 0;j<i;j++){
+		   	if(!this[j]) continue;
+		       if(this[j].time>this[i].time){
+		         this.splice(j,0,this[i]);
+		         this.splice(i+1,1);
+		       }
+		    }
+		  }
+		  return this; 
+		};
+
 
 	  //update
     function updatePos(timeDiff,ball){
@@ -228,8 +261,9 @@
 				if(document.getElementById("Die_after_hit").checked){
 					balls.splice(balls.indexOf(ball),1);
 				}	
-					
+				
 				wall_collide(ball,"x",timeDiff);
+				AI_target(balls,"R");	
 				R_s++;
 				document.getElementById("right_s").innerHTML = "Right:"+R_s;
 				if(R_s>=top_score.R){
@@ -241,6 +275,7 @@
 				if(document.getElementById("Die_after_hit").checked)
 					balls.splice(balls.indexOf(ball),1);
 				wall_collide(ball,"x",timeDiff);
+				AI_target(balls,"R");	
 				L_s++;
 				document.getElementById("left_s").innerHTML = "Left:"+L_s;
 				if(L_s>=top_score.L){
@@ -269,10 +304,10 @@
 			document.getElementById("left_s").innerHTML = "Money:"+L_s.toFixed(2);
 			if(L_s>=top_score.L){
 					victor(1);
-					top_score=-1;}
+					top_score=9999999;}
 			if(R_s>=top_score.R){
 					victor(-1);
-					top_score=-1;
+					top_score=9999999;
 				}
 		}
 		//collide ball
@@ -294,12 +329,14 @@
 			ball.last_collide=bar_L;
 			bar_effect(ball,bar_L);
 			ball.se=-1;
+			AI_target(balls,"R");
 			//console.log("hit bar L");
 		}else if(ball.y >= bar_R.y && ball.y <= bar_R.height+bar_R.y && ball.x+ball.r >= bar_R.x && ball.x <= bar_R.x+bar_R.width&& !check_over_collide(ball,bar_R)){
 			wall_collide(ball,"x",timeDiff);
 			bar_effect(ball,bar_R);
 			ball.se=-1;
 			ball.last_collide=bar_R;
+			AI_target(balls,"R");
 			//console.log("hit bar R");	
 		}
         //collide prop
@@ -402,9 +439,16 @@
 					updatePos(timeDiff,elements);
 					firework(elements);
 				});
+		
 		//detect bar's move
+		if(AI_move_R_enable)
+			AI_move(bar_R,hit_point_R[0]);
+		if(AI_move_L_enable)
+			AI_move(bar_L,hit_point_L[0]);
 		move_bar(bar_L);
 		move_bar(bar_R);
+		
+		
 		
 		//test
 		//var img = document.getElementById("test_img").onload;
@@ -464,6 +508,7 @@
 		// request new frame
        requestAnimFrame(function() {
           animate(canvas, time, ball);
+          AI_target(balls,"R")
         });
       }
 		
@@ -532,6 +577,7 @@
    
    function add_ball(){
 	balls.push(new C_ball(document.input.n_ball_x.value,document.input.n_ball_y.value,document.input.n_ball_spx.value,document.input.n_ball_spy.value,10,document.input.User_color.value,document.input.n_ball_mass.value,));
+	AI_target(balls,"R")
 	//iball_now++;
 	//console.log("ball"+iball_now+"created!");
    }
@@ -540,8 +586,9 @@
 	var bar_R = new C_bar(canvas.width*0.95,canvas.height*0.35,20,canvas.height*0.3,"#66ccff");
 	var bar_L = new C_bar(canvas.width*0.05-20,canvas.height*0.35,20,canvas.height*0.3,"#FF0000");
 	
-	
-   animate(canvas,time,balls); 
+   AI_target(balls,"R") 	
+   animate(canvas,time,balls);
+
    
    //copy from Stake
    function getRandomColor() 
@@ -581,6 +628,7 @@
 			
 			ball1.last_collide=ball2;
 			ball2.last_collide=ball1;
+			AI_target(balls,"R");	
 			
 			//console.log("collide detected");
 			
@@ -654,6 +702,7 @@
 	document.addEventListener('keydown', function(event) {
 		if(event.keyCode == 32) { //space
         balls.push(new C_ball(canvas.width/2,canvas.height/2,null ,null ,10 ,null) );
+        AI_target(balls,"R");
 		event.preventDefault();
 	}
 	});
@@ -872,19 +921,76 @@
 		fireworks.push(new C_firework(firework.x-firework.r*getRandomArbitrary(0, 6),firework.y-firework.r*getRandomArbitrary(0, 6),-Math.abs(firework.vx)*2,-Math.abs(firework.vy)*2,firework.r/2,firework.des_time/3));
 	}
 
-	/*function AI(balls,side){
-		var hit_point=[];
-		balls.forEach(function(elements){
-			i++
-			let k=ball.vy/ball.vx;
+	function AI_target(balls,side){
 
+				if(AI_L_Main==true){
+			hit_point_L[0]={y:300,time:9999,}
+			balls.forEach(function(elements,index){
+			let k=elements.vy/elements.vx;
+			if (elements.vx<0) {
+				var j=0;
+				hit_point_L[j].y= Math.abs((elements.x-bar_L.x+bar_L.width)*k+elements.y);
+				hit_point_L[j].time=Math.abs((bar_L.x-elements.x)/elements.vx*10);
+				AI_move_L_enable=true;
+				j++;
+			}
+			})
+			hit_point_L.AI_insertion_sort();
+			} 
+			
+		if(AI_R_Main==true){
 
-		})
+			hit_point_R[0]={y:300,time:9999}
+			balls.forEach(function(elements,index){
+			let k=elements.vy/elements.vx;
+			if (elements.vx>0) {
+				var i=0;
+				hit_point_R[i]={y:300,time:9999}
+			//slope heads downwards
+				hit_point_R[i].y= Math.abs((bar_R.x-elements.x)*k+elements.y);
+				hit_point_R[i].time=(bar_R.x-elements.x)/elements.vx*10;
+				AI_move_R_enable=true;
+				i++;
+			}
+			})
+			hit_point_R.AI_insertion_sort();
+			}
+		
+
+		
+			/*if(hit_point[index].y==300 && hit_point[index].time==0){
+			 hit_point.splice(index,1);
+			 if(index==0)
+			 AI_R_enable=false;
+			}*/
 		
 	}
-*/
+
+	function AI_move(bar,hit_point){
+		//if(!hit_point) return;
+		if(hit_point.y>bar.y+bar.height/2){
+					bar.down=true;
+					bar.up=false;
+					//console.log("up");
+				}else if(hit_point.y<bar.y+bar.height/2){
+					bar.down=false;
+					bar.up=true;
+					//console.log("down");
+				}else if(hit_point.y>bar.y && hit_point.y<bar.y+bar.height/2){
+					bar.down=false;
+					bar.up=false;
+					//console.log("stop");
+				}
+		
+	}
+	
 
 
+	//sorting From Wiki
+	/*
+	AI ONLY!
+	*/
+	
 
 
 

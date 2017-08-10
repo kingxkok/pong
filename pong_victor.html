@@ -18,10 +18,9 @@
 <br>
 <button class="down" onclick="startExtreme()">Extreme</button>
 <br>
+    <button class="slide" onclick="startFun()">Fun! </button>
 </h2>
-<h3>
-<button class="slide" onclick="startFun()">Fun! </button>
-</h3>
+
 </div>
 
 <div id="mainPlay">
@@ -69,7 +68,7 @@
     	this.isExist = true;
     }
 
-    function particle(x,y,angle,v,a,color){
+    function particle(x,y,angle,v,a,color,radius){
     this.x = x;
     this.y = y;
     this.lastLocs = [ 
@@ -81,7 +80,7 @@
     this.a = a; // the deacceleration
     this.vx = 0;
     this.vy = 0;
-    this.radius = 3;// the radius of the balls
+    this.radius = radius;// the radius of the balls
     this.color=color;
     this.angle = angle;// explode angle of each balls
     this.originalAngle = angle;
@@ -275,7 +274,6 @@
       //   //eject!
       //   // ball.x+=ball.vx*5;
       //   // ball.y+=ball.vy*5;
-        
       //   //pause();
       //   //bounce(ball,paddle);
       // }
@@ -318,11 +316,11 @@
       isCollide = false;
   	}
 
-    function newParticle(x,y){
+    function newParticle(x,y,radius){
       var particleGroup = [];
       var color = 'hsl('+360*Math.random()+', 100%, 70%)';
       for(var i=0; i<18; i++){
-        particleGroup.push(new particle(x, y, i*10, 1*Math.random() + 2, 0.02 ,color));
+        particleGroup.push(new particle(x, y, i*10, 1*Math.random() + 2, 0.02 ,color,radius));
         var radian = (particleGroup[i].angle-90)/180*(2*Math.PI);
         particleGroup[i].vx = particleGroup[i].v*Math.sin(radian);
         particleGroup[i].vy = particleGroup[i].v*Math.cos(radian);
@@ -479,6 +477,13 @@
       var selectmenu = document.getElementById('menu');
       selectmenu.parentNode.removeChild(selectmenu);
       slowformGroup1();
+      canvas.addEventListener('mousedown', function(evt) {
+            pos = getMousePos(canvas, evt);
+            isGravity = true;
+            isCollide = false;
+          });
+      canvas.addEventListener('mousemove', function(evt) {pos = getMousePos(canvas, evt);});
+      canvas.addEventListener('mouseup', function(evt) {isGravity = false;});
   	}
 
     function startExtreme(){
@@ -487,6 +492,13 @@
       var selectmenu = document.getElementById('menu');
       selectmenu.parentNode.removeChild(selectmenu);
       slowformGroup2();
+      canvas.addEventListener('mousedown', function(evt) {
+            pos = getMousePos(canvas, evt);
+            isGravity = true;
+            isCollide = false;
+          });
+      canvas.addEventListener('mousemove', function(evt) {pos = getMousePos(canvas, evt);});
+      canvas.addEventListener('mouseup', function(evt) {isGravity = false;});
     }
 
     function startFun(){
@@ -495,6 +507,13 @@
       var selectmenu = document.getElementById('menu');
       selectmenu.parentNode.removeChild(selectmenu);
       slowformGroup3();
+      canvas.addEventListener('mousedown', function(evt) {
+            pos = getMousePos(canvas, evt);
+            isGravity = true;
+            isCollide = false;
+          });
+      canvas.addEventListener('mousemove', function(evt) {pos = getMousePos(canvas, evt);});
+      canvas.addEventListener('mouseup', function(evt) {isGravity = false;});
     }
 
     function animate(canvas, time){
@@ -526,18 +545,11 @@
 
           document.getElementById("output").textContent = "left: " + leftBalls+"\t\t   right: " + rightBalls;
         
-          canvas.addEventListener('mousedown', function(evt) {
-            pos = getMousePos(canvas, evt);
-            isGravity = true;
-            isCollide = false;
-          });
-          canvas.addEventListener('mousemove', function(evt) {pos = getMousePos(canvas, evt);});
-          canvas.addEventListener('mouseup', function(evt) {isGravity = false;});
           if(isFirework == true){
               if(isCreate == false){
                 number = ballgroup.length;
                 while(ballgroup.length > 0){
-                  newParticle(ballgroup[0].x,ballgroup[0].y);
+                  newParticle(ballgroup[0].x,ballgroup[0].y,ballgroup[0].radius);
                   ballgroup.splice(0,1);
                 }
                 isCreate = true;
@@ -556,7 +568,7 @@
                 ballgroup[i].color = randomColor();
                 rightBalls++;
                 document.getElementById("output").textContent = "left: " + leftBalls+"\t\tright: " + rightBalls;
-                ballgroup[i] = new createBall(500, 250, 10, (1-Math.random()*2)*speed, (2-Math.random()*2)*speed, randomColor());
+                ballgroup[i] = new createBall(500, 250, 10, (1-Math.random()*2)*speed, (1-Math.random()*2)*speed, randomColor());
                 ballgroup[i].lastBall = -1; 
                 
               }
@@ -564,7 +576,7 @@
                 ballgroup[i].color = randomColor();
                 leftBalls++;
                 document.getElementById("output").textContent = "left: " + leftBalls+"\t\tright: " + rightBalls;
-                ballgroup[i] = new createBall(500, 250, 10, (1-Math.random()*2)*speed, (2-Math.random()*2)*speed, randomColor());
+                ballgroup[i] = new createBall(500, 250, 10, (1-Math.random()*2)*speed, (1-Math.random()*2)*speed, randomColor());
                 ballgroup[i].lastBall = -1; 
                 
               }
@@ -647,21 +659,13 @@
           context.fillStyle = "rgba(255,255,255,"+opa+")"
           context.fillRect(0, 0, canvas.width, canvas.height);
 
-          document.getElementById("output").textContent = "left: " + leftBalls+"\tright: " + rightBalls +"\ttop: " + topBalls+"\tbottom: " + bottomBalls;
-        
-          canvas.addEventListener('mousedown', function(evt) {
-            pos = getMousePos(canvas, evt);
-            isGravity = true;
-            isCollide = false;
-          });
-          canvas.addEventListener('mousemove', function(evt) {pos = getMousePos(canvas, evt);});
-          canvas.addEventListener('mouseup', function(evt) {isGravity = false;});
+          document.getElementById("output").textContent = "left: " + leftBalls+"\tright: " + rightBalls +"\ttop: " + topBalls+"\tbottom: " + bottomBalls; 
 
           if(isFirework == true){
               if(isCreate == false){
                 number = ballgroup.length;
                 while(ballgroup.length > 0){
-                  newParticle(ballgroup[0].x,ballgroup[0].y);
+                  newParticle(ballgroup[0].x,ballgroup[0].y,ballgroup[0].radius);
                   ballgroup.splice(0,1);
                 }
                 isCreate = true;
@@ -680,7 +684,7 @@
                 ballgroup[i].color = randomColor();
                 rightBalls++;
                 document.getElementById("output").textContent = "left: " + leftBalls+"\tright: " + rightBalls +"\ttop: " + topBalls+"\tbottom: " + bottomBalls;
-                ballgroup[i] = new createBall(500, 250, 10, (1-Math.random()*2)*speed, (2-Math.random()*2)*speed, randomColor());
+                ballgroup[i] = new createBall(500, 250, 10, (1-Math.random()*2)*speed, (1-Math.random()*2)*speed, randomColor());
                 ballgroup[i].lastBall = -1; 
                 
               }
@@ -688,7 +692,7 @@
                 ballgroup[i].color = randomColor();
                 leftBalls++;
                 document.getElementById("output").textContent = "left: " + leftBalls+"\tright: " + rightBalls +"\ttop: " + topBalls+"\tbottom: " + bottomBalls;
-                ballgroup[i] = new createBall(500, 250, 10, (1-Math.random()*2)*speed, (2-Math.random()*2)*speed, randomColor());
+                ballgroup[i] = new createBall(500, 250, 10, (1-Math.random()*2)*speed, (1-Math.random()*2)*speed, randomColor());
                 ballgroup[i].lastBall = -1; 
                 
               }
@@ -696,7 +700,7 @@
                 ballgroup[i].color = randomColor();
                 bottomBalls++;
                 document.getElementById("output").textContent = "left: " + leftBalls+"\tright: " + rightBalls +"\ttop: " + topBalls+"\tbottom: " + bottomBalls;
-                ballgroup[i] = new createBall(500, 250, 10, (1-Math.random()*2)*speed, (2-Math.random()*2)*speed, randomColor());
+                ballgroup[i] = new createBall(500, 250, 10, (1-Math.random()*2)*speed, (1-Math.random()*2)*speed, randomColor());
                 ballgroup[i].lastBall = -1; 
                
               }
@@ -704,7 +708,7 @@
                 ballgroup[i].color = randomColor();
                 topBalls++;
                 document.getElementById("output").textContent = "left: " + leftBalls+"\tright: " + rightBalls +"\ttop: " + topBalls+"\tbottom: " + bottomBalls;
-                ballgroup[i] = new createBall(500, 250, 10, (1-Math.random()*2)*speed, (2-Math.random()*2)*speed, randomColor());
+                ballgroup[i] = new createBall(500, 250, 10, (1-Math.random()*2)*speed, (1-Math.random()*2)*speed, randomColor());
                 ballgroup[i].lastBall = -1; 
                 
               }
@@ -781,18 +785,12 @@
           context.fillStyle = "rgba(255,255,255,"+opa+")"
           context.fillRect(0, 0, canvas.width, canvas.height);
         
-          canvas.addEventListener('mousedown', function(evt) {
-            pos = getMousePos(canvas, evt);
-            isGravity = true;
-            isCollide = false;
-          });
-          canvas.addEventListener('mousemove', function(evt) {pos = getMousePos(canvas, evt);});
-          canvas.addEventListener('mouseup', function(evt) {isGravity = false;});
+          
           if(isFirework == true){
               if(isCreate == false){
                 number = ballgroup.length;
                 while(ballgroup.length > 0){
-                  newParticle(ballgroup[0].x,ballgroup[0].y);
+                  newParticle(ballgroup[0].x,ballgroup[0].y,ballgroup[0].radius/2);
                   ballgroup.splice(0,1);
                 }
                 isCreate = true;
@@ -876,8 +874,9 @@
                 }
               }
               speedControl(ballgroup[i]);
-
+          refresh(ballgroup[i]);
           
+          }
           paintPaddle(context,leftPaddle,"red");
           paintPaddle(context,rightPaddle,"blue");
           paintPaddle(context,topPaddle,"yellow");
@@ -887,9 +886,6 @@
           context.drawImage(img2, big.x, big.y, 20, 20);
           context.drawImage(img3, small.x, small.y, 20, 20);
           context.drawImage(img4, dec.x, dec.y, 20, 20);
-          refresh(ballgroup[i]);
-          
-          }
           refreshPaddle(leftPaddle);
           refreshPaddle(rightPaddle)
           refreshPaddle(topPaddle);
@@ -1187,8 +1183,8 @@ h1 {
 h2 {
   font: 100 2vw Raleway;
   position: fixed;
+  text-align: center;
   top: 180;
-  left: 500;
 }
 h3 {
   font: 100 2vw Raleway;

@@ -1,14 +1,17 @@
 <html>
+
   <head>
     <meta charset="utf-8">
-      <title>PONG</title>
-    </head>
+    <title> PONG </title>
+  </head>
+
   <body>
-    <center>
-      <canvas id='screen' width='1024' height='720'></canvas>
-    </center>
+    <center> <canvas id='screen' width='1024' height='720'> </canvas> </center>
+    <img id='Cat' src="PIC/Nyan_Cat0.jpg" style='display:none' width='1024' height='720'>
+    <img id='Icon' src="PIC/Excited_Frog.png" style='display:none'>
+    <img id='Universe' src="PIC/Space.png" style='display:none'>
     <audio id='BGM' controls autoplay style='display:none'>
-        <source src='BGM/PON_PON_PON.mp3' type='audio/mpeg' loop=true>
+        <source src='BGM/Atari_Original_Soundtrack.mp3' type='audio/mpeg' loop=true>
         Your browser does not support this tag.
     </audio>
     <audio id='BWG' controls style='display:none'>
@@ -203,6 +206,7 @@
       };
     };
     //initialize
+    var lifeSec = 0;
     var stat=['menu'];
     var player_L = {};
     var player_R = {};
@@ -216,27 +220,27 @@
     var player_R = new Player('red','right');
     ball[0] = new Ball(Math.random()*2*Math.PI);
     window.addEventListener('keydown', function(e) {
-    if (stat[0] != 'menu') {
-      if (e.KeyCode == 87 || e.which == 87){  // On Press W
-            player_L.paddle.direction = 'up';
+      if (stat[0] != 'menu') {
+        if (e.KeyCode == 87 || e.which == 87){  // On Press W
+          player_L.paddle.direction = 'up';
         };
         if (e.KeyCode == 83 || e.which == 83){  // On Press S
-            player_L.paddle.direction = 'down';
+          player_L.paddle.direction = 'down';
         };
         if ((e.KeyCode == 38 || e.which == 38) && (!botOn)) { // On Press UP
-            player_R.paddle.direction = 'up';
+          player_R.paddle.direction = 'up';
         };
-        if ((e.KeyCode == 40 || e.which == 40) && (!botOn)) { // On Press DOWN
-            player_R.paddle.direction = 'down';
+       if ((e.KeyCode == 40 || e.which == 40) && (!botOn)) { // On Press DOWN
+          player_R.paddle.direction = 'down';
         };
         if (e.KeyCode == 32 || e.which == 32){  // On Press Spacebar
-            if (stat[2]=='run') {
-              stat[2] = 'pause';
-              soundEffect.gamePause.play();
-            } else if (stat[2]=='pause' || stat[2]=='win') {
-              stat[2] = 'run';
-              soundEffect.gameResume.play();
-            };
+          if (stat[2]=='run') {
+            stat[2] = 'pause';
+            soundEffect.gamePause.play();
+          } else if (stat[2]=='pause' || stat[2]=='win') {
+            stat[2] = 'run';
+            soundEffect.gameResume.play();
+          };
         };
         if (e.KeyCode == 66 || e.which == 66) { // On Press B
           //triger bot
@@ -249,21 +253,21 @@
           }
           //reset round
           ball[0].reset();
-        player_L.paddle.reset();
-        player_R.paddle.reset();
-        roundLimit = 8000;
-        bonus = 0;
-        stat[2]='pause';
+          player_L.paddle.reset();
+          player_R.paddle.reset();
+          roundLimit = 8000;
+          bonus = 0;
+          stat[2]='pause';
         };
         if (e.KeyCode == 82 || e.which == 82) { // On Press R
           //reset round
           ball[0].reset();
-        player_L.paddle.reset();
-        player_R.paddle.reset();
-        roundLimit = 8000;
-        bonus = 0;
-        stat[2]='pause';
-        soundEffect.tie.play();
+          player_L.paddle.reset();
+          player_R.paddle.reset();
+          roundLimit = 8000;
+          bonus = 0;
+          stat[2]='pause';
+          soundEffect.tie.play();
         };
         if (e.KeyCode == 67 || e.which == 67) { // On Press C
           if (cheat) {
@@ -272,26 +276,29 @@
             cheat = true;
           };
         };
-    };
-         if (e.KeyCode == 77 || e.which == 77) {  // On Press M
-          if (backgroundMusic.paused) {
-            backgroundMusic.play();
-            if (stat[0] != 'menu') {soundEffect.backgroundMusicResume.play()};
-          } else {
-            backgroundMusic.pause();
-            if (stat[0] != 'menu') {soundEffect.backgroundMusicPause.play()};
-          };
-        };
-        if (e.KeyCode == 78 || e.which == 78) { // On Press N
-          backgroundMusic.pause();
-          if (currentSong < backgroundMusicList.length - 1) {
-            currentSong ++;
-          } else {
-            currentSong = 0;
-          }
-          backgroundMusic.src = 'BGM/' + backgroundMusicList[currentSong];
+      } 
+      if (e.KeyCode == 76 || e.which == 76) {  // On Press L
+        loop = !(loop);
+      };
+      if (e.KeyCode == 77 || e.which == 77) {  // On Press M
+        if (backgroundMusic.paused) {
           backgroundMusic.play();
+          if (stat[0] != 'menu') {soundEffect.backgroundMusicResume.play()};
+        } else {
+          backgroundMusic.pause();
+          if (stat[0] != 'menu') {soundEffect.backgroundMusicPause.play()};
         };
+      };
+      if (e.KeyCode == 78 || e.which == 78) { // On Press N
+        backgroundMusic.pause();
+        if (currentSong < backgroundMusicList.length - 1) {
+          currentSong ++;
+        } else {
+          currentSong = 0;
+        }
+        backgroundMusic.src = 'BGM/' + backgroundMusicList[currentSong];
+        backgroundMusic.play();
+      };
     });
     window.addEventListener('keyup', function(e) {
       if (e.KeyCode == 87 || e.which == 87 || e.KeyCode == 83 || e.which == 83) {
@@ -300,122 +307,160 @@
             player_R.paddle.direction = 'stop';
         }
     });
-    //window.addEventListener('keypress', function(e) {
-      
-    //});
 
     //animation
     window.requestAnimFrame = (function(callback) {
-        return window.requestAnimationFrame || window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || 
-          function(callback) {
-            window.setTimeout(callback, 10);
-          };
-        })();
-      var date = new Date();
-      var time = date.getTime();
-      var preTime = time;
-      var winner;
-      var roundLimit = 8000;
-      var bonus = 0;
-      var alpha = 0;
-      var alphaAddDirection = 1;
-      var backgroundMusic = document.getElementById('BGM');
-      var backgroundMusicList = ['PON_PON_PON.mp3','Renai_Circulation.mp3','Alice.mp3','To_The_Limit.mp3','Dango_Daikazoku.mp3','Toki_Wo_Kizamu_Uta.mp3','Decent_Black.mp3','My_Soul_Your_Beats.mp3','Tabi_No_Owari.mp3','Theme_Of_SSS.mp3','This_Game.mp3','Scolding_Hong_Kong_Reporter.mp3'];
-      var currentSong = 0;
-      var textShownTime = -1;
-      var soundEffect = {
-        redWinRound : document.getElementById('RWR'),
-        redWinGame : document.getElementById('RWG'),
-        blueWinRound : document.getElementById('BWR'),
-        blueWinGame : document.getElementById('BWG'),
-        timeUp : document.getElementById('TU'),
-        tie : document.getElementById('T'), 
-        gameStart : document.getElementById('GS'),
-        gamePause : document.getElementById('GP'),
-        gameResume : document.getElementById('GR'),
-        botAdd : document.getElementById('BA'),
-        botRemove : document.getElementById('BR'),
-        backgroundMusicPause : document.getElementById('BMP'),
-        backgroundMusicResume : document.getElementById('BMR'),
-        backgroundMusicChange : document.getElementById('BMC'),
-        hit : document.getElementById('HIT')
+      return window.requestAnimationFrame || window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || 
+      function(callback) {
+        window.setTimeout(callback, 10);
       };
-      var specialEvent = {
-        SE00 : document.getElementById('SE00'),
-        SE01 : document.getElementById('SE01'),
-        SE02 : document.getElementById('SE02'),
-        SE03 : document.getElementById('SE03'),
-        SE04 : document.getElementById('SE04')
-      };
+    })();
+    var date = new Date();
+    var time = date.getTime();
+    var preTime = time;
+    var winner;
+    var roundLimit = 8000;
+    var bonus = 0;
+    var alpha = 0;
+    var alphaAddDirection = 1;
+    var backgroundMusic = document.getElementById('BGM');
+    var backgroundMusicList = ['Atari_Original_Soundtrack.mp3','Renai_Circulation.mp3','Alice.mp3','To_The_Limit.mp3','Dango_Daikazoku.mp3','Toki_Wo_Kizamu_Uta.mp3','Decent_Black.mp3','My_Soul_Your_Beats.mp3','Tabi_No_Owari.mp3','Theme_Of_SSS.mp3','This_Game.mp3','Nyan_Cat.mp3','PON_PON_PON.mp3'];
+    var currentSong = 0;
+    var textShownTime = -1;
+    var textShownX = 0;
+    var textShownY = 0;
+    var soundEffect = {
+      redWinRound : document.getElementById('RWR'),
+      redWinGame : document.getElementById('RWG'),
+      blueWinRound : document.getElementById('BWR'),
+      blueWinGame : document.getElementById('BWG'),
+      timeUp : document.getElementById('TU'),
+      tie : document.getElementById('T'), 
+      gameStart : document.getElementById('GS'),
+      gamePause : document.getElementById('GP'),
+      gameResume : document.getElementById('GR'),
+      botAdd : document.getElementById('BA'),
+      botRemove : document.getElementById('BR'),
+      backgroundMusicPause : document.getElementById('BMP'),
+      backgroundMusicResume : document.getElementById('BMR'),
+      backgroundMusicChange : document.getElementById('BMC'),
+      hit : document.getElementById('HIT')
+    };
+    var specialEvent = {
+      SE00 : document.getElementById('SE00'),
+      SE01 : document.getElementById('SE01'),
+      SE02 : document.getElementById('SE02'),
+      SE03 : document.getElementById('SE03'),
+      SE04 : document.getElementById('SE04')
+    };
+    var cat=document.getElementById("Cat");
+    var icon=document.getElementById("Icon");
+    var universe=document.getElementById("Universe");
+    var currentGif = 0;
+    var stack = 0;
+    var loop = true;
     backgroundMusic.addEventListener('ended', function() {
-        backgroundMusic.pause();
-        if (currentSong < backgroundMusicList.length - 1) {
-          currentSong ++;
-        } else {
-          currentSong = 0;
+    if (!loop) {
+      backgroundMusic.pause();
+      if (currentSong < backgroundMusicList.length - 1) {
+        currentSong ++;
+      } else {
+        currentSong = 0;
+      };
+      backgroundMusic.src = 'BGM/' + backgroundMusicList[currentSong];
+      backgroundMusic.play();
+      backgroundMusic.volume = 1/6;
+    };
+    });
+    function bonusTime() {
+      ball[0].direction = Math.PI/5;
+    };
+    function unlimitedRoundTime() {
+      roundLimit = 1/0;
+    };
+    for (var effect in soundEffect) {
+      effect.volume = 1/3;
+    };
+    backgroundMusic.volume = 1/6;
+    function omitCharacter(inputString) {
+      for (i = inputString.length-1; i >= 0; i --) {
+        if (inputString[i] == '3' && inputString[i-1] == 'p' && inputString[i-2] == 'm' && inputString[i-3] == '.') {
+          inputString = inputString.slice(0, i-3) + inputString.slice(i+1,inputString.length); 
+        } else if (inputString[i] == '_') {
+          inputString = inputString.slice(0, i) + ' ' + inputString.slice(i+1,inputString.length); 
         };
-        backgroundMusic.src = 'BGM/' + backgroundMusicList[currentSong];
-        backgroundMusic.play();
-        if (currentSong = 11) {
-      		backgroundMusic.volume = 1/2;
-        } else {
-			backgroundMusic.volume = 1/9;
-        };
-      })
-      backgroundMusic.volume = 1/9;
-      function bonusTime() {
-        ball[0].direction = Math.PI/5;
       };
-      function unlimitedRoundTime() {
-        roundLimit = 1/0;
-      };
-      for (var effect in soundEffect) {
-        effect.volume = 1/3;
-      };
-      function omitCharacter(inputString) {
-        for (i = inputString.length-1; i >= 0; i --) {
-          if (inputString[i] == '3' && inputString[i-1] == 'p' && inputString[i-2] == 'm' && inputString[i-3] == '.') {
-            inputString = inputString.slice(0, i-3) + inputString.slice(i+1,inputString.length); 
-          } else if (inputString[i] == '_') {
-            inputString = inputString.slice(0, i) + ' ' + inputString.slice(i+1,inputString.length); 
-          };
-        };
-        return inputString;
-      };
+      return inputString;
+    };
     //active to repaint/refresh the canvas
     function refresh() {
-        alpha += 0.03 * alphaAddDirection;
-        if (alpha >= 1) {
-          alphaAddDirection = -1;
-        } else if (alpha <= 0.4) {
-          alphaAddDirection = 1;
+      if (currentSong == 11) {
+        plane.drawImage(cat,0,0);
+        if (stack > 4) {
+          cat.src = 'PIC/Nyan_Cat'+currentGif+'.jpg';
+          if (currentGif < 11) {
+            currentGif ++;
+          } else {
+            currentGif = 0;
+          };
+          stack = 0;
+        } else {
+          stack ++;
         };
+      };
+      alpha += 0.03 * alphaAddDirection;
+      if (alpha >= 1) {
+        alphaAddDirection = -1;
+      } else if (alpha <= 0.4) {
+        alphaAddDirection = 1;
+      };
       var date = new Date();
-          var time = date.getTime();
-          var timeDiff = time - preTime;
-          preTime = time;
+      var time = date.getTime();
+      var timeDiff = time - preTime;
+      preTime = time;
       plane.fillStyle = 'rgba(255,255,255,0.7)';
+      if (currentSong == 0) {plane.drawImage(universe,0,0);};
       plane.fillRect(0,0,GUI.width, GUI.height);
+      if (stat[0] != 'menu') {
+        plane.drawImage(icon,5,610);
+        plane.fillStyle = 'Green';
+        plane.textAlign = 'left';
+        plane.font = '16px Comic Sans MS';
+        plane.fillText(lifeSec + ' s',128,704);
+      } else {
+         plane.drawImage(icon,384,16);
+      };
+      if (textShownTime >= 0) {
+        plane.font = '16px Comic Sans MS';
+        plane.fillStyle = 'Green';
+        plane.fillText('SE -1s',textShownX,textShownY);
+        plane.fillText('🐸 +1s',75,600);
+      };
       plane.textAlign = 'left';
       plane.font = '16px Comic Sans MS';
       plane.fillStyle = 'Black';
-      plane.fillText('Current Background Music: ' + omitCharacter(backgroundMusicList[currentSong]),640,688);
-      plane.fillText('Current Play Time: ' + backgroundMusic.currentTime.toFixed(2) + ' / '+ backgroundMusic.duration.toFixed(2) ,640,704);
+      plane.fillText('Current Music: ' + omitCharacter(backgroundMusicList[currentSong]),512,688);
+      plane.fillText('Current Play Time: ' + backgroundMusic.currentTime.toFixed(2) + ' / '+ backgroundMusic.duration.toFixed(2) ,512,704);
+      plane.fillText('Loop: ' + loop ,896,704);
       plane.textAlign = 'center';
-        plane.strokeStyle = 'Black';
-        plane.lineWidth=10;
-        plane.strokeRect(0,0,GUI.width,GUI.height);
-        plane.lineWidth=4;
-        plane.font = '128px Comic Sans MS';
-        plane.textAlign = 'center';
-        plane.fillStyle = 'Red';
-        plane.fillText('P', GUI.width*3/9, GUI.height/6);
-        plane.fillStyle = 'Black';
-        plane.fillText('O', GUI.width*4/9, GUI.height/6);
-        plane.fillStyle = 'Green';
-        plane.fillText('N', GUI.width*5/9, GUI.height/6);
-        plane.fillStyle = 'Blue';
-        plane.fillText('G', GUI.width*6/9, GUI.height/6);
+      plane.strokeStyle = 'Black';
+      plane.lineWidth=10;
+      plane.strokeRect(0,0,GUI.width,GUI.height);
+      plane.lineWidth=4;
+      plane.font = '128px Comic Sans MS';
+      plane.textAlign = 'center';
+      plane.fillStyle = 'Red';
+      if (currentSong == 0) {plane.fillStyle = 'Black'};
+      plane.fillText('P', GUI.width*3/9, GUI.height/6);
+      plane.fillStyle = 'Black';
+      if (currentSong == 0) {plane.fillStyle = 'Black'};
+      plane.fillText('O', GUI.width*4/9, GUI.height/6);
+      plane.fillStyle = 'Green';
+      if (currentSong == 0) {plane.fillStyle = 'Black'};
+      plane.fillText('N', GUI.width*5/9, GUI.height/6);
+      plane.fillStyle = 'Blue';
+      if (currentSong == 0) {plane.fillStyle = 'Black'};
+      plane.fillText('G', GUI.width*6/9, GUI.height/6);
       if (stat[0] == 'game') {
         if (stat[1] == 'offline') {
           if (roundLimit <= 0) {
@@ -506,12 +551,6 @@
             plane.lineTo(1024,360);
             plane.closePath();*/
           } else if (stat[2] == 'run') {
-          	if (textShownTime >= 0) {
-          		plane.font = '16px Comic Sans MS';
-          		plane.fillStyle = 'Green';
-          		plane.fillText('🐸: -1s',textShownX,textShownY);
-          		textShownY -= timeDiff/10;
-          	};
             if (botOn) {
             if (ball[0].x > 512) {
               if (ball[0].y + ball[0].radius - player_R.paddle.y < 0 || ball[0].y - ball[0].radius - player_R.paddle.y - player_R.paddle.height > 0) {
@@ -542,6 +581,7 @@
             };
             roundLimit -= timeDiff;
           	textShownTime -= timeDiff;
+            textShownY -= timeDiff/10;
             //update the ball status
             ball[0].x += ball[0].speed*Math.cos(ball[0].direction)*timeDiff/100;
             ball[0].y += ball[0].speed*Math.sin(ball[0].direction)*timeDiff/100;
@@ -619,6 +659,7 @@
                 ball[0].y += ball[0].speed*Math.sin(ball[0].direction)*timeDiff/90;
                 roundLimit -= 1000;
                 textShownTime = 1000;
+                lifeSec ++;
                 textShownX = ball[0].x;
                 textShownY = ball[0].y;
                 soundEffect.hit.play();
@@ -646,6 +687,7 @@
                 ball[0].y += ball[0].speed*Math.sin(ball[0].direction)*timeDiff/90;
                 roundLimit -= 1000;
                 textShownTime = 1000;
+                lifeSec ++;
                 textShownX = ball[0].x;
                 textShownY = ball[0].y;
                 soundEffect.hit.play();
@@ -663,6 +705,7 @@
               ball[0].y += ball[0].speed*Math.sin(ball[0].direction)*timeDiff/90;
                 roundLimit -= 1000;
                 textShownTime = 1000;
+                lifeSec ++;
                 textShownX = ball[0].x;
                 textShownY = ball[0].y;
               soundEffect.hit.play();
@@ -860,8 +903,10 @@
         plane.textAlign = 'left';
         plane.font = '16px Comic Sans MS';
         plane.fillStyle = 'Black';
-        plane.fillText('Current Background Music: ' + omitCharacter(backgroundMusicList[currentSong]),640,688);
-        plane.fillText('Current Play Time: ' + backgroundMusic.currentTime.toFixed(2) + ' / '+ backgroundMusic.duration.toFixed(2) ,640,704);
+        plane.fillStyle = 'Black';
+        plane.fillText('Current Music: ' + omitCharacter(backgroundMusicList[currentSong]),512,688);
+        plane.fillText('Current Play Time: ' + backgroundMusic.currentTime.toFixed(2) + ' / '+ backgroundMusic.duration.toFixed(2) ,512,704);
+        plane.fillText('Loop: ' + loop ,896,704);
         plane.textAlign = 'center';
         plane.strokeStyle = 'Black';
         plane.lineWidth=10;
@@ -870,19 +915,23 @@
         plane.font = '128px Comic Sans MS';
         plane.textAlign = 'center';
         plane.fillStyle = 'Red';
+        if (currentSong == 0) {plane.fillStyle = 'Black'};
         plane.fillText('P', GUI.width*3/9, GUI.height/6);
         plane.fillStyle = 'Black';
+        if (currentSong == 0) {plane.fillStyle = 'Black'};
         plane.fillText('O', GUI.width*4/9, GUI.height/6);
         plane.fillStyle = 'Green';
+        if (currentSong == 0) {plane.fillStyle = 'Black'};
         plane.fillText('N', GUI.width*5/9, GUI.height/6);
         plane.fillStyle = 'Blue';
+        if (currentSong == 0) {plane.fillStyle = 'Black'};
         plane.fillText('G', GUI.width*6/9, GUI.height/6);
-          //cancer
-          plane.font = '24px Comic Sans MS';
-          plane.scale(0.8+alpha/4,0.8+alpha/4);
+        //cancer
+        plane.font = '24px Comic Sans MS';
+        plane.scale(0.8+alpha/4,0.8+alpha/4);
         plane.fillStyle = 'rgba(0,' + ~~((1.6-alpha)*255) + ',0,' + (alpha-0.16) +')';
         plane.fillText('Click / Tap on anywhere to START', GUI.width/2/(0.8+alpha/4), (GUI.height*1/2 + alpha*4)/(0.8+alpha/4));
-          plane.scale(1/(0.8+alpha/4),1/(0.8+alpha/4));
+        plane.scale(1/(0.8+alpha/4),1/(0.8+alpha/4));
         GUI.addEventListener('mousedown', function menuClick(e){  //  function click
               plane.clearRect(0,0,GUI.width,GUI.height);
               player_L = new Player('blue','left');
@@ -890,10 +939,11 @@
               ball[0] = new Ball(Math.random()*2*Math.PI);
               stat = ['game','offline','pause'];
               soundEffect.gameStart.play();
-              currentSong = 11;
-          	  backgroundMusic.src = 'BGM/' + backgroundMusicList[currentSong];
-      			backgroundMusic.volume = 1;
-    		  backgroundMusic.play();
+              if (!loop) {  
+                currentSong = 11;
+                backgroundMusic.src = 'BGM/' + backgroundMusicList[currentSong];
+                backgroundMusic.play();
+              };
               GUI.removeEventListener('mousedown',menuClick);
               GUI.addEventListener('touchstart', function inGameTouchStart(e){  //  function click
                 relativeX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - GUI.offsetLeft;
@@ -926,11 +976,11 @@
           }
           //reset round
           ball[0].reset();
-        player_L.paddle.reset();
-        player_R.paddle.reset();
-        roundLimit = 8000;
-        bonus = 0;
-        stat[2]='pause';
+          player_L.paddle.reset();
+          player_R.paddle.reset();
+          roundLimit = 8000;
+          bonus = 0;
+          stat[2]='pause';
                   };
                 } else if (relativeX>2048/3 && !botOn) {
                   if (relativeY<player_R.paddle.y) {

@@ -9,7 +9,7 @@
     </style>
   </head>
   <body>
-   <audio autoplay="autoplay" loop="loop">
+   <audio id='song'  loop="loop">
     <source src="PONG.mp3" type="audio/mpeg">
       Your browser does not support the audio tag.
     </audio>
@@ -36,6 +36,7 @@
       var context = document.getElementById('myCanvas').getContext('2d');
       var date = new Date();
       var time = date.getTime();
+      var song =  document.getElementById('song');
 
       document.getElementById("myBtn").addEventListener("click", reset);
 
@@ -50,6 +51,7 @@
       	ball.vy = 0
       	ball.color = "black"
       }
+      song.load();
 	}	
       
       var Keys = {
@@ -108,7 +110,7 @@
 
 		  }
 		 
-		 canvas.addEventListener("click", function(){Start(balls)});
+		 canvas.addEventListener("click", function(){Start(balls); song.play(); });
 
 
                    
@@ -237,48 +239,56 @@
 	          	if(ball.vx > 0){
 	          	ball.vx = -ball.vx
 	          	ball.color = "blue"
+              paddleSound();
 	          }
 	          }
 	          if(paddle1.x > ball.x + ball.vx &&  ball.x + ball.vx > paddle1.x - ball.r && paddle1.y + paddle1.height + ball.r > ball.y + ball.vy && ball.y + ball.vy > paddle1.y - ball.r){
 	          	if(ball.vx > 0){
 	          	ball.vx = -ball.vx
 	          	ball.color = "red"
+              paddleSound();
 	          }
 	          }
 	          if(paddle1.x + ball.r + paddle1.width > ball.x + ball.vx && ball.x + ball.vx > paddle1.x && paddle1.y + paddle1.height + ball.r > ball.y + ball.vy && ball.y + ball.vy > paddle1.y - ball.r){
 	          	if(ball.vx < 0){
 	          	ball.vx = -ball.vx
 	          	ball.color = "red"
+              paddleSound();
 	          }
 	          }
 	          if(paddle2.x + ball.r + paddle2.width > ball.x + ball.vx && ball.x + ball.vx > paddle2.x + paddle2.width && paddle1.y + paddle1.height + ball.r > ball.y + ball.vy && ball.y + ball.vy > paddle2.y - ball.r){
 	          	if(ball.vx < 0){
 	          	ball.vx = -ball.vx
 	          	ball.color = "blue"
+              paddleSound();
 	          }
 	          }
 	          if(paddle2.y + paddle2.height + ball.rw > ball.y && paddle2.y + paddle2.height < ball.y && paddle2.x + paddle2.width - ball.r > ball.x +  ball.vx && ball.x +  ball.vx > paddle2.x - ball.r){
 	          	if(ball.vy < 0){
 	          	ball.vy = -ball.vy
 	          	ball.color = "blue"
+              paddleSound();
 	          }
 	          }
 	          if(paddle1.y + paddle1.height + ball.r > ball.y && paddle1.y + paddle1.height < ball.y && paddle1.x + paddle1.width - ball.r > ball.x +  ball.vx && ball.x +  ball.vx > paddle1.x - ball.r){
 	          	if(ball.vy < 0){
 	          	ball.vy = -ball.vy
 	          	ball.color = "red"
+              paddleSound();
 	          }
 	      	  }
 	          if(paddle2.y - ball.r < ball.y && paddle2.y > ball.y && paddle2.x + paddle2.width - ball.r > ball.x +  ball.vx && ball.x +  ball.vx > paddle2.x - ball.r){
 	          	if(ball.vy > 0){
 	          	ball.vy = -ball.vy
 	          	ball.color = "blue"
+              paddleSound();
 	          }
 	      	  }
 	          if(paddle1.y - ball.r < ball.y && paddle1.y > ball.y && paddle1.x + paddle1.width - ball.r > ball.x +  ball.vx && ball.x +  ball.vx > paddle1.x - ball.r){
 	          	if(ball.vy > 0){
 	          	ball.vy = -ball.vy
 	          	ball.color = "red"
+              paddleSound();
 	          }
 	      	  }
 		}
@@ -289,6 +299,9 @@
        requestAnimFrame(function() {
           animate(canvas, time);
         });
+      }
+      function paddleSound(){
+
       }
 			window.onkeydown = function(e){
           	var kc = e.keyCode;

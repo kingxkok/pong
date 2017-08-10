@@ -2,17 +2,39 @@
 <html>
   <head>
     <style>
+     @import url(https://fonts.googleapis.com/css?family=Raleway:100,500,900);
       body {
-     
+        font: 500 2vw Raleway;
       	margin: 0px;
         background-image: url("https://i.imgsafe.org/3a767d39a2.png");
-        
+        line-height: 130%;
         background-position: center;
         background-repeat: no-repeat;
-        background-color:  white;
+        background-color:  black;
         text-align: center;
     	
       }
+      a {
+        background: none;
+        font: inherit;
+        line-height: 1;
+        margin: 0.5em;
+        padding: 1em 2em;
+        text-decoration: none;
+      }
+      a {
+          color: var(--color);
+          transition: 0.25s;
+        }
+        a:hover, button:focus {
+          border: 2px solid;
+          border-color: var(--hover);
+          color: #fff;
+        }
+        #title {
+          color: #fff;
+         font: 500 4vw Raleway;
+        }
       #Hints {
         font-style: italic;
         font-weight: bold;
@@ -32,12 +54,12 @@
     </style>
   </head>
   <body id = "myBody">
-  	<p>.</p>
-    <a href='/pong_kai'> Kai </a>
-    <a href='/pong_victor'> Victor </a>
-    <a href='/pong_jordan'> Jordan </a>
-    <a href='/pong_luke'> Luke </a>
-    <a href='/pong_frost'> Frost </a>
+  	<p id="title">Who's game shall we play?</p>
+    <p><a href='/pong_kai'> Kai </a></p>
+    <p><a href='/pong_victor'> Victor </a></p>
+    <p><a href='/pong_jordan'> Jordan </a></p>
+    <p><a href='/pong_luke'> Luke </a></p>
+    <p><a href='/pong_frost'> Frost </a></p>
 
     <script>
         
