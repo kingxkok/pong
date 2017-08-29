@@ -293,7 +293,6 @@ function game(){
 		  renderScores(context);
 
         // request new frame
-        console.log(speedup)
 		    
         requestAnimFrame(function() {
 		      if(started){
@@ -331,7 +330,7 @@ function game(){
 	  function renderScores(context){
 	  	for(var n = 0; n < players.length; n++){
 	  		var player = players[n];
-	  		context.fillStyle = 'white';
+	  		context.fillStyle = 'black';
 	  		context.font = "20px Arial";
 	  		context.fillText("Player " + player.name + ": \t", 10, (20*(1+n)) );
 	  		context.fillText(player.score, 150, (20*(1+n)));
@@ -385,6 +384,7 @@ function game(){
 	  	if(killgame) return;
 		  if(!started) {
 			animate(canvas, balls, time, mousePos);
+      speedup = animspeedup;
 			started = true;
 		  }
 		  else {
@@ -398,6 +398,7 @@ function game(){
 		  if(kc == SPACE){
     		if(!started) {
     			animate(canvas, balls, time, mousePos);
+          speedup = animspeedup;
     			started = true;
     		}
     		else {

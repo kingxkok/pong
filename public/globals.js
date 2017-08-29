@@ -25,4 +25,4 @@ var canvas = document.getElementById('myCanvas');
 		var lifespan = 900;
 		var spawn = true;
 
-        var animspeedup = 10;
+        var animspeedup = 1;
