@@ -8,7 +8,6 @@
 
 <div id="start">
 <span data-text="P"></span><span data-text="O"></span><span data-text="N"></span><span data-text="G"></span>
-<br>
 <h1>press space to start</h1>
 </div>
 
@@ -24,10 +23,9 @@
 </div>
 
 <div id="mainPlay">
-<h4>
-<p id= "output"></p>
+<h4 id="output"></h4>
 <canvas id="Canvas" height="500" width="1000" style="border:1px solid #000000;"></canvas>
-</h4>
+<br>
 </div>
 
 <script>
@@ -1179,28 +1177,43 @@ h1 {
 h2 {
   font: 100 2vw Raleway;
   text-align: center;
-  top: 180;
+ /* top: 180; */
 }
 h3 {
   font: 100 2vw Raleway;
-  position: fixed;
+ /* position: fixed; 
   top: 390;
-  left: 525;
+  left: 525; */
 }
 h4 {
     background-color: #FFF;
-    font: 500 2vw Raleway;
+    font: 500 30px Raleway;
     color: black;
-    position: fixed;
+    align-self: center;
+    position: relative; 
+   /* width: 1000;
     top: 20;
-    left: 150;
+    left: 150; */
 }
 
   #start {
-    margin-top: 10vh;
+    margin-top: 20vh;
   }
   #menu {
-    margin-top: 10vh;
+    margin-top: 20vh;
+  }
+  #mainPlay {
+    width: 1000;
+    text-align: center;
+    align-self: center;
+    margin: auto;
+    margin-top: 15vh;
+    padding-top: 0px;
+  }
+  #output {
+    width: 1000;
+    position: relative;
+    padding-bottom: 0px;
   }
 
 </style>
