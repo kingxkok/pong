@@ -7,20 +7,20 @@
 <body>
 
 <div id="start">
-<span data-text="P"></span><span data-text="🐸"></span><span data-text="N"></span><span data-text="G"></span>
+<span data-text="P"></span><span data-text="O"></span><span data-text="N"></span><span data-text="G"></span>
 <br>
 <h1>press space to start</h1>
 </div>
 
 <div id="menu">
-<h2>
-<button class="up" onclick="startClassical()">Classical</button>
-<br>
-<button class="down" onclick="startExtreme()">Extreme</button>
-<br>
-    <button class="slide" onclick="startFun()">Fun! </button>
-</h2>
-
+  <h2>
+    <button class="up" onclick="startClassical()">Classical</button>
+    <br>
+    <button class="down" onclick="startExtreme()">Extreme</button>
+    <br>
+    <button class="slide" onclick="startFun()">Fun!</button>
+    <br>
+  </h2>
 </div>
 
 <div id="mainPlay">
@@ -982,10 +982,8 @@
   }
 }
 body {
-    position: absolute;
-    left: 50vh;
-    top: 20vh;
-  height: 50vh;
+    position: relative; 
+    text-align: center; 
   overflow: hidden;
   background: #000;
   -webkit-animation: glow 8s both;
@@ -1125,7 +1123,7 @@ span:after {
 }
 .slide:hover,
 .slide:focus {
-  box-shadow: inset 6.5em 0 0 0 var(--hover);
+  box-shadow: inset 9.5em 0 0 0 var(--hover);
 }
 
 
@@ -1157,7 +1155,6 @@ body {
   background: #17181c;
   font: 100 1vw Raleway;
   position: relative;
-  display: flex;
 }
 
 button {
@@ -1165,16 +1162,15 @@ button {
   border: 2px solid;
   font: inherit;
   line-height: 1;
-  margin: 0.5em;
-  padding: 1em 2em;
+  margin: 0.5em; 
+  padding: 1em 2em;  
+  width: 15vw;
 }
 
 h1 {
     color: white;
     font: 100 3vw Raleway;
-    position: absolute;
-    left: 15vh;
-    top: 60vh;
+    position: relative; 
     opacity:0;
     -webkit-animation: fade 2s infinite ease-in-out;
     -webkit-animation-delay: 5s; 
@@ -1182,7 +1178,6 @@ h1 {
 }
 h2 {
   font: 100 2vw Raleway;
-  position: fixed;
   text-align: center;
   top: 180;
 }
@@ -1201,7 +1196,13 @@ h4 {
     left: 150;
 }
 
-  
+  #start {
+    margin-top: 10vh;
+  }
+  #menu {
+    margin-top: 10vh;
+  }
+
 </style>
 </body>
 </html>
